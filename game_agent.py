@@ -166,16 +166,16 @@ class CustomPlayer:
                 search_depth = 1
                 #try as 1
                 while 1:
-                    score, next_move = search(game, search_depth)
+                    score, next_move = search(game, depth=search_depth, maximizing_player=True)
                     if (score, next_move) > (best_score, best_move):
-                        (score, next_move) = (best_score, best_move)
+                        (best_score, best_move) = (score, next_move)
 
                     search_depth += 1
             else:
                 score, next_move = search(game, self.search_depth)
 
                 if (score, next_move) > (best_score, best_move):
-                    (score, next_move) = (best_score, best_move)
+                    (best_score, best_move) = (score, next_move)
 
         except Timeout:
             # Handle any actions required at timeout, if necessary
