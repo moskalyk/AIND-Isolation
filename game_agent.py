@@ -43,10 +43,23 @@ def custom_score(game, player):
     if game.is_winner(player):
         return float("inf")
 
+    return heuristic_score_weighted_with_board(game, player)
+
+def heuristic_score_simple(game, player):
     own_moves = len(game.get_legal_moves(player))
     opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
     return float(own_moves - opp_moves)
 
+def heuristic_score_weighted(game, player):
+    own_moves = len(game.get_legal_moves(player))
+    opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
+    return float(own_moves * 2 - opp_moves * 1)
+
+def heuristic_score_weighted_with_board(game, player):
+    blank_spaces = len(game.get_blank_spaces())
+    own_moves = len(game.get_legal_moves(player))
+    opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
+    return float(own_moves * 3 - opp_moves * 2 + blank_spaces * 1)
 
 class CustomPlayer:
     """Game-playing agent that chooses a move using your evaluation function
@@ -134,7 +147,7 @@ class CustomPlayer:
         # move from the game board (i.e., an opening book), or returning
         # immediately if there are no legal moves
         if not legal_moves: 
-            return (-1, -1)
+            return self.suicide_move
 
         best_move = legal_moves[random.randint(0, len(legal_moves) - 1)]
         best_score = self.NEG_INF
@@ -148,8 +161,6 @@ class CustomPlayer:
                 search = self.minimax
             else:
                 search = self.alphabeta
-#                 raise Timeout()
-
 
             if self.iterative:
                 search_depth = 1
@@ -165,10 +176,6 @@ class CustomPlayer:
 
                 if (score, next_move) > (best_score, best_move):
                     (score, next_move) = (best_score, best_move)
-                # if next_move is not (-1, -1):
-                #     best_move = next_move
-                # else:
-                #     return next_move
 
         except Timeout:
             # Handle any actions required at timeout, if necessary
@@ -177,7 +184,6 @@ class CustomPlayer:
         return best_move
 
         # Return the best move from the last completed search iteration
-        # raise NotImplementedError
 
     def minimax(self, game, depth, maximizing_player=True):
         """Implement the minimax search algorithm as described in the lectures.
@@ -278,8 +284,6 @@ class CustomPlayer:
                     best_score, best_move = score, move
                 if best_score >= beta: 
                     return (best_score, best_move)
-                
-#                 if best_score > beta: return (beta, best_move)
         else:
             # Iterate through all possible legale moves
             for move in game.get_legal_moves():
@@ -291,6 +295,3 @@ class CustomPlayer:
                     return (best_score, best_move)
                 
         return best_score, best_move
-
-        # TODO: finish this function!
-#         raise NotImplementedError
