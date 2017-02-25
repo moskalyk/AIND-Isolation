@@ -43,7 +43,14 @@ def custom_score(game, player):
     if game.is_winner(player):
         return float("inf")
 
-    return heuristic_score_weighted_with_board(game, player)
+    return heuristic_score_moves_to_board(game, player)
+
+def heuristic_score_moves_to_board(game, player):
+    own_moves = len(game.get_legal_moves(player))
+    opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
+    board_size = game.height * game.width
+    moves_to_board = game.move_count / board_size
+    return float((own_moves*moves_to_board - opp_moves))
 
 def heuristic_score_simple(game, player):
     own_moves = len(game.get_legal_moves(player))
@@ -53,7 +60,8 @@ def heuristic_score_simple(game, player):
 def heuristic_score_weighted(game, player):
     own_moves = len(game.get_legal_moves(player))
     opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
-    return float(own_moves * 2 - opp_moves * 1)
+    
+    return float(own_moves * 1 - opp_moves * 2)
 
 def heuristic_score_weighted_with_board(game, player):
     blank_spaces = len(game.get_blank_spaces())
