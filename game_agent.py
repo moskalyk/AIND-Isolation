@@ -60,7 +60,6 @@ def heuristic_score_simple(game, player):
 def heuristic_score_weighted(game, player):
     own_moves = len(game.get_legal_moves(player))
     opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
-    
     return float(own_moves * 1 - opp_moves * 2)
 
 def heuristic_score_weighted_with_board(game, player):
