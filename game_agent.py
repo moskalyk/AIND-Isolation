@@ -43,11 +43,12 @@ def custom_score(game, player):
     if game.is_winner(player):
         return float("inf")
 
-    return heuristic_score_moves_to_board(game, player)
+    return heuristic_score_block_opponent(game, player)
 
 def heuristic_score_moves_to_board(game, player):
     own_moves = len(game.get_legal_moves(player))
     opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
+    board_size = game.height * game.width
     board_size = game.height * game.width
     moves_to_board = game.move_count / board_size
     return float((own_moves*moves_to_board - opp_moves))
@@ -60,6 +61,7 @@ def heuristic_score_simple(game, player):
 def heuristic_score_weighted(game, player):
     own_moves = len(game.get_legal_moves(player))
     opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
+    
     return float(own_moves * 1 - opp_moves * 2)
 
 def heuristic_score_weighted_with_board(game, player):
@@ -67,6 +69,48 @@ def heuristic_score_weighted_with_board(game, player):
     own_moves = len(game.get_legal_moves(player))
     opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
     return float(own_moves * 3 - opp_moves * 2 + blank_spaces * 1)
+
+def heuristic_score_weighted_with_board_defensive_to_offensive(game, player):
+    blank_spaces = len(game.get_blank_spaces())
+    own_moves = len(game.get_legal_moves(player))
+    opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
+    board_size = game.height * game.width
+    moves_to_board = game.move_count / board_size
+    
+    if moves_to_board <= 0.5:
+        return float(own_moves * 2 - opp_moves)
+    else:
+        return float(own_moves - opp_moves * 2)
+    
+def heuristic_score_weighted_with_board_offensive_to_defensive(game, player):
+    blank_spaces = len(game.get_blank_spaces())
+    own_moves = len(game.get_legal_moves(player))
+    opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
+    board_size = game.height * game.width
+    moves_to_board = game.move_count / board_size
+    
+    if moves_to_board > 0.5:
+        return float(own_moves * 2 - opp_moves)
+    else:
+        return float(own_moves - opp_moves * 2)
+    
+def heuristic_score_block_opponent(game, player):
+    play_moves = game.get_legal_moves(player) 
+    opp_moves = game.get_legal_moves(game.get_opponent(player))
+    same_moves = len(list(set(play_moves) & set(opp_moves)))
+    board_size = game.height * game.width
+    own_moves = len(game.get_legal_moves(player))
+    opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
+    moves_to_board = game.move_count / board_size
+    
+    if moves_to_board <= 0.33:
+        return float(own_moves * 2 - opp_moves)
+    elif moves_to_board > 0.33 and moves_to_board <= 0.66:
+        return float(own_moves * 2 - opp_moves )
+    else:
+        return float(own_moves - opp_moves * 2 + same_moves)
+    
+    
 
 class CustomPlayer:
     """Game-playing agent that chooses a move using your evaluation function
@@ -171,12 +215,14 @@ class CustomPlayer:
 
             if self.iterative:
                 search_depth = 1
-                #try as 1
                 while 1:
+                    
                     score, next_move = search(game, depth=search_depth, maximizing_player=True)
+                    #check if new score is better than previous
                     if (score, next_move) > (best_score, best_move):
                         (best_score, best_move) = (score, next_move)
-
+                        
+                    #increase the search depth
                     search_depth += 1
             else:
                 score, next_move = search(game, self.search_depth)
@@ -224,6 +270,8 @@ class CustomPlayer:
                 evaluation function directly.
         """
         best_move = self.suicide_move
+        
+        #assign the best score based on if the player is a maximizing player or minimizing player
         best_score = self.NEG_INF if maximizing_player else self.POS_INF
         optimizer = max if maximizing_player else min
         
@@ -231,6 +279,7 @@ class CustomPlayer:
         if depth is 0: return self.score(game, self), best_move
         
         for move in game.get_legal_moves():
+            #recursively call minimax on next move
             score, _ = self.minimax(game.forecast_move(move), depth - 1, not maximizing_player)
             best_score, best_move = optimizer((best_score, best_move), (score, move))
             
@@ -286,7 +335,10 @@ class CustomPlayer:
         
         if maximizing_player:
             for move in game.get_legal_moves():
+                
+                #return score for the move 
                 score, _ = self.alphabeta(game.forecast_move(move), depth - 1, best_score, beta, not maximizing_player)
+                
                 if score > best_score: 
                     best_score, best_move = score, move
                 if best_score >= beta: 
@@ -296,6 +348,7 @@ class CustomPlayer:
             for move in game.get_legal_moves():
                 # Return the score for that 
                 score, _ = self.alphabeta(game.forecast_move(move), depth - 1, alpha, best_score, not maximizing_player)
+                
                 if score < best_score: 
                     best_score, best_move = score, move
                 if best_score <= alpha: 
