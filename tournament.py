@@ -56,7 +56,6 @@ same opponents.
 
 Agent = namedtuple("Agent", ["player", "name"])
 
-
 def play_match(player1, player2):
     """
     Play a "fair" set of matches between two agents by playing two games

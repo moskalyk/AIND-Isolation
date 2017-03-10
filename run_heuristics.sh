@@ -1,0 +1,20 @@
+echo "Running heuristic: heuristic_score_simple"
+python tournament.py heuristic_score_simple
+
+echo "Running heuristic: heuristic_score_moves_to_board"
+python tournament.py heuristic_score_moves_to_board
+
+echo "Running heuristic: heuristic_score_weighted"
+python tournament.py heuristic_score_weighted
+
+echo "Running heuristic: heuristic_score_weighted_with_board"
+python tournament.py heuristic_score_weighted_with_board
+
+echo "Running heuristic: heuristic_score_weighted_with_board_defensive_to_offensive"
+python tournament.py heuristic_score_weighted_with_board_defensive_to_offensive
+
+echo "Running heuristic: heuristic_score_weighted_with_board_offensive_to_defensive"
+python tournament.py heuristic_score_weighted_with_board_offensive_to_defensive
+
+echo "Running heuristic: heuristic_score_block_opponent"
+python tournament.py heuristic_score_block_opponent
