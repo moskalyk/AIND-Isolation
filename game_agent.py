@@ -116,7 +116,7 @@ def custom_score(game, player):
     if game.is_winner(player):
         return float("inf")
 
-    return heuristic[sys.argv[1]]
+    return heuristic[sys.argv[1]](game, player)
 
 
 class CustomPlayer:
