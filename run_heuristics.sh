@@ -1,20 +1,27 @@
 echo "Running heuristic: heuristic_score_simple"
-python tournament.py heuristic_score_simple
+touch heuristic_score_simple.txt
+python tournament.py heuristic_score_simple >> heuristic_score_simple.txt
 
 echo "Running heuristic: heuristic_score_moves_to_board"
-python tournament.py heuristic_score_moves_to_board
+touch heuristic_score_moves_to_board.txt
+python tournament.py heuristic_score_moves_to_board >> heuristic_score_moves_to_board.txt
 
 echo "Running heuristic: heuristic_score_weighted"
-python tournament.py heuristic_score_weighted
+touch heuristic_score_weighted.txt
+python tournament.py heuristic_score_weighted >> heuristic_score_weighted.txt
 
 echo "Running heuristic: heuristic_score_weighted_with_board"
-python tournament.py heuristic_score_weighted_with_board
+touch heuristic_score_weighted_with_board.txt
+python tournament.py heuristic_score_weighted_with_board >> heuristic_score_weighted_with_board
 
 echo "Running heuristic: heuristic_score_weighted_with_board_defensive_to_offensive"
-python tournament.py heuristic_score_weighted_with_board_defensive_to_offensive
+touch heuristic_score_weighted_with_board_defensive_to_offensive.txt
+python tournament.py heuristic_score_weighted_with_board_defensive_to_offensive >> heuristic_score_weighted_with_board_defensive_to_offensive
 
 echo "Running heuristic: heuristic_score_weighted_with_board_offensive_to_defensive"
-python tournament.py heuristic_score_weighted_with_board_offensive_to_defensive
+touch heuristic_score_weighted_with_board_offensive_to_defensive.txt
+python tournament.py heuristic_score_weighted_with_board_offensive_to_defensive >> heuristic_score_weighted_with_board_offensive_to_defensive
 
 echo "Running heuristic: heuristic_score_block_opponent"
-python tournament.py heuristic_score_block_opponent
+touch heuristic_score_block_opponent.txt
+python tournament.py heuristic_score_block_opponent >> heuristic_score_block_opponent
