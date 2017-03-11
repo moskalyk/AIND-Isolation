@@ -116,7 +116,8 @@ def custom_score(game, player):
     if game.is_winner(player):
         return float("inf")
 
-    return heuristic[sys.argv[1]](game, player)
+    return heuristic_score_weighted_with_board_offensive_to_defensive(game, player)
+    # return heuristic[sys.argv[1]](game, player) # uncomment this to run the $ ./run_heuristics.sh
 
 
 class CustomPlayer:
